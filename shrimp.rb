@@ -12,6 +12,14 @@ class Shrimp
   def call(env)
     puts SHRIMP_STRING
 
-    @app.call(env)
+    status, headers, response = @app.call(env)
+
+    response_body = ""
+    response.each { |part| response_body += part }
+    response_body += "<pre>#{SHRIMP_STRING}</pre>"
+
+    headers['Content-Length'] = response_body.length.to_s
+
+    [status, headers, [response_body]]
   end
 end

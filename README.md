@@ -7,6 +7,8 @@
     1. [Calling the Base Application](#a-calling-the-base-application)
     2. [Execute Code before Response Hits Base Application]
 (#b-execute-code-before-response-hits-base-application)
+    3. [Changing the `header` and `body` of the Response using Middleware]
+(#c-changing-the-header-and-body-of-the-response-using-middleware)
 
 ## I. Demo Application from `rack`
 
@@ -71,3 +73,32 @@ application
         <----/|/|/|
     127.0.0.1 - - [22/Nov/2013 15:55:53] "GET / HTTP/1.1" 200 592 0.0008
     ```
+
+### C. Changing the `header` and `body` of the Response using Middleware
+
+1. First, get the `status`, `header`, and `response` of the **original** base
+application
+
+    ```ruby
+    status, headers, response = @app.call(env) # calling the base app
+    ```
+
+2. Modify value of header elements
+
+    ```ruby
+    headers['Content-Length'] = 1234
+    ```
+
+3. Modify the `body` of the final response
+    * The **return value** of the `call` method in a middleware **dictates** the
+        final response
+    * Example:
+
+        ```ruby
+        [status, headers, ['My new response body']]
+        ```
+
+        The `[]` around the string is absolutely necessary. The response-body
+        cannot just be a pure `String`
+
+Please see tag `jl/middleware-change-body-header`
