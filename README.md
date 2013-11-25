@@ -9,6 +9,7 @@
 (#b-execute-code-before-response-hits-base-application)
     3. [Changing the `header` and `body` of the Response using Middleware]
 (#c-changing-the-header-and-body-of-the-response-using-middleware)
+3. [Display Unicode Content](#iii-display-unicode-content)
 
 ## I. Demo Application from `rack`
 
@@ -102,3 +103,27 @@ application
         cannot just be a pure `String`
 
 Please see tag `jl/middleware-change-body-header`
+
+## III. Display Unicode Content
+
+To show unicode characters in the response, we have to do 3 things
+
+1. Mark the file to be encoded with utf-8
+
+    ```ruby
+    # encoding: UTF-8
+    ```
+
+2. `Content-Type` in the header needs to specify utf-8
+
+    ```
+    charset=utf-8
+    ```
+
+3. `Content-Length` needs be counted in `bytesize` not character count
+
+    ```
+    Rack::Utils.bytesize(response_body)
+    ```
+
+Please check `jl/middleware-unicode`
